@@ -14,14 +14,18 @@ import (
 	"github.com/ap4y/gpgdb/lib"
 )
 
+type HTTPClient interface {
+	Do(req *http.Request) (resp *http.Response, err error)
+}
+
 type Client struct {
 	Host   string
 	entity *lib.Entity
-	http.Client
+	HTTPClient
 }
 
 func NewClient(host string, entity *lib.Entity) *Client {
-	return &Client{host, entity, http.Client{}}
+	return &Client{host, entity, &http.Client{}}
 }
 
 func (c *Client) Put(key, value string) error {
