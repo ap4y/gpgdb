@@ -163,7 +163,7 @@ func (c *Client) do(request *lib.Request) (*http.Response, error) {
 
 	if response.StatusCode != http.StatusOK {
 		error, _ := ioutil.ReadAll(response.Body)
-		message := fmt.Sprintf("Unable to write value, Code: %s, message: %s",
+		message := fmt.Sprintf("Code: %s, message: %s",
 			response.Status, error)
 		return nil, errors.New(message)
 	}
