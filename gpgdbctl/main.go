@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 
 	"github.com/howeyc/gopass"
 
@@ -84,7 +85,7 @@ func keys() {
 	if keys, err := client.Keys(); err != nil {
 		fmt.Printf("Unable to get keys: %s", err)
 	} else {
-		log.Printf("Keys: %s", keys)
+		log.Printf("Keys:\n%s", strings.Join(keys, "\n"))
 	}
 }
 
@@ -97,7 +98,7 @@ func get(args []string) {
 	if value, err := client.Get(args[0]); err != nil {
 		fmt.Printf("Unable to get value: %s", err)
 	} else {
-		fmt.Printf("Value: %s", value)
+		fmt.Printf("Value:\n%s", value)
 	}
 }
 
