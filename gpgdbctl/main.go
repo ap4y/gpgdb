@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strings"
@@ -22,6 +24,7 @@ Commands:
   put     Put *key* with *value*
   keys    List all available keys
   get     Get value of the *key*
+  xclip   Copy value of the *key* to the keyboard
   delete  Delete value of the *key*
 
 Options:
@@ -63,6 +66,8 @@ func main() {
 		keys()
 	case "get":
 		get(args[1:])
+	case "xclip":
+		xclip(args[1:])
 	case "delete":
 		delete(args[1:])
 	}
@@ -99,6 +104,27 @@ func get(args []string) {
 		fmt.Printf("Unable to get value: %s", err)
 	} else {
 		fmt.Printf("Value:\n%s", value)
+	}
+}
+
+func xclip(args []string) {
+	if len(args) != 1 {
+		fmt.Printf("Missing key argument")
+		return
+	}
+
+	value, err := client.Get(args[0])
+	if err != nil {
+		fmt.Printf("Unable to get value: %s", err)
+		return
+	}
+
+	cmd := exec.Command("xclip", "-selection", "clipboard")
+	cmd.Stdin = bytes.NewReader(value)
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Unable to get copy value to clipboard: %s", err)
+	} else {
+		fmt.Printf("Done!")
 	}
 }
 
